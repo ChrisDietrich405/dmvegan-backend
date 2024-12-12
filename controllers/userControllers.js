@@ -2,6 +2,26 @@ const User = require("../models/userModel"); // Import the User model
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
+///for google sign in
+
+const googleSignIn = async (req, res) => {
+	try {
+		const { googleId, name, email, photoUrl } = req.body;
+
+		// Check if user already exists
+		let user = await User.findOne({ googleId });
+		if (!user) {
+			user = new User({ googleId, name, email, photoUrl });
+			await user.save();
+		}
+
+		res.status(200).json({ message: "User saved successfully", user });
+	} catch (error) {
+		console.error("Error saving user", error);
+		res.status(500).json({ message: "Error saving user" });
+	}
+};
+
 const getUsers = async (req, res) => {
 	console.log("hello");
 	try {
@@ -139,4 +159,5 @@ module.exports = {
 	getUsers,
 	createUser,
 	resetPassword,
+	googleSignIn,
 };
