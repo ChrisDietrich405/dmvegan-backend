@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const { generateKey } = require("crypto");
 
 const loginUser = async (req, res) => {
 	const { email, password } = req.body;
@@ -39,4 +40,30 @@ const loginUser = async (req, res) => {
 	}
 };
 
-module.exports = { loginUser };
+const googleSSOSignIn = async (req, res) => {
+	const { email, familyName, givenName, name, id, photo } = req.body;
+
+	try {
+		const user = await User.findOne({ email });
+		console.log("USER", user);
+
+		if (user) {
+			return res.status(404).json({ message: "User already exists" });
+		}
+
+		const newUser = {
+			email,
+			familyName,
+			givenName,
+			googleId: id,
+			name,
+			photo,
+		};
+
+		await User.create(newUser);
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+module.exports = { loginUser, googleSSOSignIn };
