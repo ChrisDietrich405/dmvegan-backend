@@ -36,9 +36,9 @@ const getUsers = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-	const { name, email, password, confirmPassword } = req.body; // Example of receiving user data from the request
+	const { name, email, password } = req.body; // Example of receiving user data from the request
 
-	if (!name || !email || !password || !confirmPassword) {
+	if (!name || !email || !password) {
 		return res
 			.status(400)
 			.json({ message: "Please add all necessary information" });
@@ -67,7 +67,6 @@ const createUser = async (req, res) => {
 			name,
 			email,
 			password: hashedPassword,
-			confirmPassword,
 		});
 
 		await newUser.save();

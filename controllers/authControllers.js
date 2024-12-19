@@ -41,7 +41,16 @@ const loginUser = async (req, res) => {
 };
 
 const googleSSOSignIn = async (req, res) => {
-	const { email, familyName, givenName, name, id, photo } = req.body;
+	const {
+		email,
+		familyName,
+		givenName,
+		name,
+		id,
+		photo,
+		password,
+		confirmPassword,
+	} = req.body;
 
 	try {
 		const user = await User.findOne({ email });
@@ -58,6 +67,8 @@ const googleSSOSignIn = async (req, res) => {
 			googleId: id,
 			name,
 			photo,
+			password,
+			confirmPassword,
 		};
 
 		await User.create(newUser);
